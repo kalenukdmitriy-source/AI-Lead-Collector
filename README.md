@@ -2,7 +2,7 @@
 
 # 🚀 AI Lead Collector
 
-### Automating Lead Collection, AI Qualification & CRM Updates with n8n
+### AI-Powered Lead Qualification & CRM Automation with n8n
 
 <img src="Banner.png" width="100%" alt="AI Lead Collector Banner">
 
@@ -18,42 +18,31 @@
 
 ---
 
-# 📌 Overview
+# 📌 About
 
-**AI Lead Collector** is an end-to-end lead automation workflow built with **n8n**.
+**AI Lead Collector** is a complete AI-powered lead management system built with **n8n**.
 
-The automation receives new leads from **Google Forms**, uses **OpenAI** to analyze and prioritize each request, stores all lead information inside **Google Sheets CRM**, and instantly notifies the sales team via **Telegram**.
+The workflow automatically collects leads from **Google Forms**, analyzes them using **OpenAI**, stores them inside **Google Sheets CRM**, sends rich notifications to **Telegram**, allows sales managers to change lead status directly from Telegram, and saves manager comments into CRM automatically.
 
-The project demonstrates how AI can automate repetitive business processes, reduce manual work, and improve response times.
+This project demonstrates how AI can automate an entire lead qualification pipeline with almost zero manual work.
 
 ---
 
 # ✨ Features
 
 - 📥 Automatic lead collection from Google Forms
-- 🤖 AI-generated lead summary
-- ⭐ AI priority classification (Small / Medium / High / VIP)
-- 📊 Automatic CRM update in Google Sheets
-- 📲 Instant Telegram notifications
+- 🤖 AI-powered lead qualification
+- 📊 Google Sheets CRM integration
+- 📲 Telegram lead notifications
+- 🔄 Telegram lead status management
+- 💬 Telegram comment logging
+- 📝 Automatic activity history
 - ⚡ Fully automated workflow
-- 🔄 Easy to customize for any business
+- 🔧 Easy to customize and extend
 
 ---
 
-# 💼 Business Value
-
-This automation helps businesses:
-
-- Reduce manual lead processing
-- Respond to new inquiries faster
-- Automatically qualify incoming leads
-- Centralize customer information
-- Improve sales team productivity
-- Eliminate repetitive administrative tasks
-
----
-
-# 🛠 Technology Stack
+# 🛠 Tech Stack
 
 | Technology | Purpose |
 |------------|---------|
@@ -61,17 +50,17 @@ This automation helps businesses:
 | OpenAI API | AI Lead Qualification |
 | Google Forms | Lead Collection |
 | Google Sheets | CRM Storage |
-| Telegram Bot API | Team Notifications |
+| Telegram Bot API | Notifications & CRM Actions |
 
 ---
 
-# 📊 Workflow Architecture
+# 📊 Workflow
 
 ```text
 Google Forms
       │
       ▼
-Receive New Lead
+Receive Lead
       │
       ▼
 OpenAI Analysis
@@ -84,37 +73,76 @@ Google Sheets CRM
       │
       ▼
 Telegram Notification
+      │
+      ▼
+Manager Actions
+(Status / Comments)
+      │
+      ▼
+CRM Updated Automatically
 ```
 
 ---
 
-# 📸 Project Preview
+# 📸 Screenshots
 
-## Workflow
+## 🤖 Main AI Lead Collector
 
 <img src="screenshots/workflow.png" width="100%">
 
+Collects leads, analyzes them with AI, stores them in CRM and sends Telegram notifications.
+
 ---
 
-## Google Sheets CRM
+## 🔄 Telegram Lead Status Manager
+
+<img src="screenshots/workflow1.png" width="100%">
+
+Processes Telegram action buttons, updates lead status in Google Sheets CRM, refreshes Telegram cards and stores activity history.
+
+---
+
+## 💬 Telegram Comment Manager
+
+<img src="screenshots/workflow2.png" width="100%">
+
+Receives manager comments from Telegram, saves them into CRM and confirms successful logging.
+
+---
+
+## 📊 Google Sheets CRM
 
 <img src="screenshots/google-sheets.png" width="100%">
 
+Central CRM where every AI-qualified lead is stored.
+
 ---
 
-## Telegram Notification
+## 📝 Manager Activity Log
+
+<img src="screenshots/google-sheets1.png" width="100%">
+
+Stores every manager action and comment received from Telegram.
+
+---
+
+## 📲 Telegram Lead Notification
 
 <img src="screenshots/telegram-message.png" width="65%">
 
+Automatically generated AI lead card delivered to the sales team.
+
 ---
 
-## Updated Lead Status
+## ✅ Updated Telegram Card
 
 <img src="screenshots/telegram-status-update.png" width="65%">
 
+Lead card automatically refreshed after manager interaction.
+
 ---
 
-# 📁 Repository Structure
+# 📁 Project Structure
 
 ```text
 AI-Lead-Collector/
@@ -124,61 +152,77 @@ AI-Lead-Collector/
 │
 └── screenshots/
     ├── workflow.png
+    ├── workflow1.png
+    ├── workflow2.png
     ├── google-sheets.png
+    ├── google-sheets1.png
     ├── telegram-message.png
     └── telegram-status-update.png
 ```
 
 ---
 
-# 🎯 Ideal Use Cases
+# 🚀 Getting Started
 
-- Lead Qualification
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/kalenukdmitriy-source/AI-Lead-Collector.git
+```
+
+### 2. Import the workflow
+
+Open **n8n** and recreate or import the workflows into your workspace.
+
+### 3. Configure credentials
+
+Before running the automation configure:
+
+- OpenAI API
+- Google Forms
+- Google Sheets
+- Telegram Bot
+
+### 4. Activate
+
+Enable all workflows and submit a test form.
+
+---
+
+# 💼 Business Value
+
+- Reduce manual lead processing
+- AI-powered lead qualification
+- Automatic CRM synchronization
+- Telegram-based lead management
+- One-click status updates
+- Manager comment logging
+- Complete lead activity history
+- Faster sales response time
+
+---
+
+# 🎯 Use Cases
+
+- AI Lead Qualification
 - CRM Automation
-- Sales Automation
+- Sales Pipeline Automation
+- Telegram CRM
 - AI Workflows
 - Marketing Automation
-- Customer Acquisition
+- Customer Management
 - Business Process Automation
-
----
-
-# 🚀 About This Project
-
-This project was created as part of my AI Automation portfolio to demonstrate practical business workflow automation using **n8n**, **OpenAI**, **Google Workspace**, and **Telegram**.
-
-It showcases how multiple cloud services can be integrated into a single intelligent workflow that saves time and improves operational efficiency.
-
----
-
-# 📞 Let's Build Something Similar
-
-If you're looking to automate your business processes with AI and n8n, I'd be happy to help.
-
-Typical automation projects include:
-
-- 🤖 AI Assistants
-- 📊 CRM Automation
-- 📧 Email Automation
-- 📅 Appointment Scheduling
-- 📲 Telegram Bots
-- 💬 Customer Support Automation
-- ⚙️ Custom Business Workflows
-
-Feel free to connect with me to discuss your project.
 
 ---
 
 # 📄 License
 
-This repository is published for **portfolio and educational purposes**.
-
-© Dmitriy Kalenuk
+This project is published for educational and portfolio purposes.
 
 ---
 
 <div align="center">
 
-### ⭐ Thanks for visiting my portfolio!
+### ⭐ If you like this project, give it a star!
 
 </div>
