@@ -84,38 +84,43 @@ This project demonstrates how AI can automate repetitive business processes whil
 
 ## Workflow
 
-![](screenshots/workflow.png)
+![](screenshots/общий%20workflow%20в%20n8n.png)
 
 ---
 
 ## Google Sheets CRM
 
-![](screenshots/google-sheets.png)
+![](screenshots/заполненную%20Google%20Таблицу....png)
 
 ---
 
 ## Telegram Notification
 
-![](screenshots/telegram.png)
+![](screenshots/сообщение%20в%20Telegram.png)
 
 ---
 
-# 📁 Project Structure
+## Updated Lead Status
+
+![](screenshots/сообщение%20в%20Telegram%20(2).png)
+---
+
+## 📁 Project Structure
 
 ```text
-ai-lead-collector/
+AI-Lead-Collector/
 │
 ├── Banner.png
 ├── README.md
 │
 ├── workflows/
-│   ├── lead-intake.json
-│   └── lead-actions.json
+│   └── AI Lead Collector _ Google Forms → AI → CRM → Telegram.json
 │
 └── screenshots/
-    ├── workflow.png
-    ├── google-sheets.png
-    └── telegram.png
+    ├── общий workflow в n8n.png
+    ├── заполненную Google Таблицу.png
+    ├── сообщение в Telegram.png
+    └── сообщение в Telegram (2).png
 ```
 
 ---
