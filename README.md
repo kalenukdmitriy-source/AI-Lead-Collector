@@ -4,14 +4,15 @@
 
 ### AI-Powered Lead Qualification & Automation with n8n
 
-<img src="Banner.png" width="100%" alt="AI Lead Collector">
+<img src="Banner.png" width="100%" alt="AI Lead Collector Banner">
 
 <br>
 
 ![n8n](https://img.shields.io/badge/n8n-Automation-FF6D5A?style=for-the-badge&logo=n8n&logoColor=white)
-![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o-412991?style=for-the-badge&logo=openai&logoColor=white)
-![Google Sheets](https://img.shields.io/badge/Google_Sheets-34A853?style=for-the-badge&logo=googlesheets&logoColor=white)
-![Telegram](https://img.shields.io/badge/Telegram-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)
+![OpenAI](https://img.shields.io/badge/OpenAI-GPT-412991?style=for-the-badge&logo=openai&logoColor=white)
+![Google Forms](https://img.shields.io/badge/Google-Forms-4285F4?style=for-the-badge&logo=googleforms&logoColor=white)
+![Google Sheets](https://img.shields.io/badge/Google-Sheets-34A853?style=for-the-badge&logo=googlesheets&logoColor=white)
+![Telegram](https://img.shields.io/badge/Telegram-Bot-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)
 
 </div>
 
@@ -19,38 +20,33 @@
 
 # 📌 About
 
-**AI Lead Collector** is a fully automated lead qualification system built with **n8n**.
+**AI Lead Collector** is an automated lead qualification system built with **n8n**.
 
-The workflow collects customer requests from **Google Forms**, sends them to **OpenAI** for AI-powered qualification, stores all information in **Google Sheets**, and instantly delivers notifications to **Telegram**.
+The workflow collects customer requests from **Google Forms**, analyzes them using **OpenAI**, stores all information in **Google Sheets**, and instantly sends notifications to **Telegram**.
 
-This project demonstrates how AI can automate repetitive business processes while improving response speed and lead quality.
+This project demonstrates how AI can automate repetitive business processes, reduce manual work, and improve response speed.
 
 ---
 
 # ✨ Features
 
-✅ Google Forms integration
-
-✅ AI Lead Qualification
-
-✅ Google Sheets CRM
-
-✅ Telegram Notifications
-
-✅ Automatic Workflow
-
-✅ Easy Deployment
+- 📥 Automatic lead collection from Google Forms
+- 🤖 AI-powered lead qualification
+- 📊 Google Sheets CRM integration
+- 📲 Instant Telegram notifications
+- ⚡ Fully automated workflow
+- 🔄 Easy to customize and extend
 
 ---
 
 # 🛠 Tech Stack
 
 | Technology | Purpose |
-|------------|----------|
+|------------|---------|
 | n8n | Workflow Automation |
 | OpenAI API | AI Lead Qualification |
 | Google Forms | Lead Collection |
-| Google Sheets | CRM Database |
+| Google Sheets | CRM Storage |
 | Telegram Bot API | Notifications |
 
 ---
@@ -58,24 +54,22 @@ This project demonstrates how AI can automate repetitive business processes whil
 # 📊 Workflow
 
 ```text
-                Google Forms
-                      │
-                      ▼
-             Receive New Lead
-                      │
-                      ▼
-             OpenAI Qualification
-                      │
-        ┌─────────────┴─────────────┐
-        ▼                           ▼
- High Quality Lead          Low Quality Lead
-        │                           │
-        └─────────────┬─────────────┘
-                      ▼
-              Google Sheets CRM
-                      │
-                      ▼
-            Telegram Notification
+Google Forms
+      │
+      ▼
+Receive New Lead
+      │
+      ▼
+OpenAI Analysis
+      │
+      ▼
+Lead Qualification
+      │
+      ▼
+Google Sheets CRM
+      │
+      ▼
+Telegram Notification
 ```
 
 ---
@@ -84,28 +78,29 @@ This project demonstrates how AI can automate repetitive business processes whil
 
 ## Workflow
 
-![](screenshots/общий%20workflow%20в%20n8n.png)
+<img src="screenshots/workflow.png" width="100%">
 
 ---
 
 ## Google Sheets CRM
 
-![](screenshots/заполненную%20Google%20Таблицу....png)
+<img src="screenshots/google-sheets.png" width="100%">
 
 ---
 
 ## Telegram Notification
 
-![](screenshots/сообщение%20в%20Telegram.png)
+<img src="screenshots/telegram-message.png" width="65%">
 
 ---
 
 ## Updated Lead Status
 
-![](screenshots/сообщение%20в%20Telegram%20(2).png)
+<img src="screenshots/telegram-status-update.png" width="65%">
+
 ---
 
-## 📁 Project Structure
+# 📁 Project Structure
 
 ```text
 AI-Lead-Collector/
@@ -114,62 +109,74 @@ AI-Lead-Collector/
 ├── README.md
 │
 ├── workflows/
-│   └── AI Lead Collector _ Google Forms → AI → CRM → Telegram.json
+│   └── ai-lead-collector.json
 │
 └── screenshots/
-    ├── общий workflow в n8n.png
-    ├── заполненную Google Таблицу.png
-    ├── сообщение в Telegram.png
-    └── сообщение в Telegram (2).png
+    ├── workflow.png
+    ├── google-sheets.png
+    ├── telegram-message.png
+    └── telegram-status-update.png
 ```
 
 ---
 
 # 🚀 Getting Started
 
-Clone the repository
+### 1. Clone the repository
 
 ```bash
-git clone https://github.com/kalenukdmitriy-source/ai-lead-collector.git
+git clone https://github.com/kalenukdmitriy-source/AI-Lead-Collector.git
 ```
 
-Import the workflow into **n8n**
+### 2. Import the workflow
 
-Configure:
+Open **n8n** and import the workflow from the **workflows** folder.
+
+### 3. Configure credentials
+
+Before running the workflow, configure:
 
 - OpenAI API
-- Google Credentials
-- Telegram Bot
 - Google Forms
+- Google Sheets
+- Telegram Bot
 
-Activate the workflow.
+### 4. Activate the workflow
+
+Enable the workflow and submit a test form.
 
 ---
 
 # 💼 Business Value
 
 - Reduce manual lead processing
-- Instant customer notifications
+- Improve response time
 - AI-powered lead qualification
-- Faster response time
-- Better sales efficiency
-- Easy integration with existing CRM
+- Automatic CRM updates
+- Instant Telegram alerts
+- Easy integration into existing business processes
 
 ---
 
-# 🎯 Perfect For
+# 🎯 Use Cases
 
-- Sales Teams
-- Agencies
-- Freelancers
+- Lead Qualification
 - CRM Automation
-- AI Workflow Portfolio
+- Sales Automation
+- AI Workflows
+- Marketing Automation
 - Business Process Automation
 
 ---
 
-# ⭐ Repository
+# 📄 License
 
-If you found this project useful, consider giving it a ⭐.
+This project is published for educational and portfolio purposes.
 
-It helps support the project and motivates future improvements.
+---
+
+<div align="center">
+
+### ⭐ If you like this project, give it a star!
+
+</div>
