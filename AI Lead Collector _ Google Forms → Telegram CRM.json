@@ -1,0 +1,835 @@
+{
+  "name": "AI Lead Collector | Google Forms → Telegram CRM",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-collector-gpt",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -32,
+        -16
+      ],
+      "id": "dfad9618-78f1-4c39-a233-1746783f0ab9",
+      "name": "📥Receive Google Form",
+      "webhookId": "1c263fc1-8998-41ef-93fb-8be731014809"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3bd1243b-8013-4b3f-8a26-b3b773eb2d56",
+              "name": "Name",
+              "value": "={{$json.body[\"Имя \"]}}",
+              "type": "string"
+            },
+            {
+              "id": "c25dd2d2-b005-4b19-9f8f-e781f70c8a90",
+              "name": "=Company",
+              "value": "={{$json.body[\"Компания  \"]}}",
+              "type": "string"
+            },
+            {
+              "id": "01f6c989-739d-4521-b5e2-62aa6fc0c218",
+              "name": "Email",
+              "value": "={{$json.body[\"Email  \"]}}",
+              "type": "string"
+            },
+            {
+              "id": "8ae9fc5e-00b1-4c58-be4a-d970c796ee4a",
+              "name": "Service",
+              "value": "={{$json.body[\"Какую автоматизацию хотите?  \"]}}",
+              "type": "string"
+            },
+            {
+              "id": "77f1b634-2d7c-4c22-9d49-dfd99cbd666e",
+              "name": "Budget",
+              "value": "={{$json.body[\"Бюджет  \"]}}",
+              "type": "string"
+            },
+            {
+              "id": "1d240ac8-bfdd-46e7-b0dd-680ee7bf25e2",
+              "name": "Notes",
+              "value": "={{$json.body[\"Комментарий  \"]}}",
+              "type": "string"
+            },
+            {
+              "id": "65a8240c-d6a1-49dc-9cb5-ceda2455468c",
+              "name": "Status",
+              "value": "New",
+              "type": "string"
+            },
+            {
+              "id": "879e7a23-8df1-455c-a528-50df5acbc0d9",
+              "name": "Source",
+              "value": "=Google Form",
+              "type": "string"
+            },
+            {
+              "id": "93cdd4a2-8e1d-497e-b345-832103b52266",
+              "name": "Date",
+              "value": "={{$now}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        192,
+        -16
+      ],
+      "id": "4645924f-03f8-4e33-b0a7-449f62919325",
+      "name": "📝 Parse User Command"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Ты анализируешь входящий лид.\n\nОпредели:\n\n1. Приоритет:\nHigh\nMedium\nLow\n\n2. Краткое резюме (одно предложение).\n\nДанные лида:\n\nИмя: {{$json.Name}}\n\nКомпания: {{$json.Company}}\n\nEmail: {{$json.Email}}\n\nУслуга: {{$json.Service}}\n\nБюджет: {{$json.Budget}}\n\nКомментарий: {{$json.Notes}}\n\nОтветь строго в формате JSON.\n\n{\n  \"priority\":\"High\",\n  \"summary\":\"...\"\n}\nВерни ТОЛЬКО JSON.\n\nБез ```json\nБез ```\nБез пояснений.\n\nФормат ответа:\n\n{\n  \"priority\": \"High\",\n  \"summary\": \"...\"\n}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        352,
+        96
+      ],
+      "id": "bc962341-e17a-485f-a326-2b82aae69b7f",
+      "name": "🤖 Generate AI Summary",
+      "credentials": {
+        "openAiApi": {
+          "id": "te7QC7Zc2j4hiICX",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Ответ OpenAI\nconst text = $json.output[0].content[0].text;\n\n// Парсим JSON\nconst ai = JSON.parse(text);\n\n// Возвращаем готовые поля\nreturn {\n  json: {\n    Priority: ai.priority,\n    Summary: ai.summary\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        624,
+        96
+      ],
+      "id": "abd19c52-995f-485b-8ece-45063857c349",
+      "name": "🧠 Extract AI Summary"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$node[\"🔗 Merge Lead + AI Summary\"].json.Budget}}",
+                    "rightValue": "до 500$",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "6a6c0632-245d-4858-9df3-3263a73fabda"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Small"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "25f1e6b3-daa8-4feb-8cca-2874df80f5b7",
+                    "leftValue": "={{$node[\"🔗 Merge Lead + AI Summary\"].json.Budget}}",
+                    "rightValue": "500-1000$",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Medium"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "804b28b2-084b-4838-91e4-b6c0aa9539a1",
+                    "leftValue": "={{$node[\"🔗 Merge Lead + AI Summary\"].json.Budget}}",
+                    "rightValue": "1000-3000$",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "High"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "f2432108-79b0-4ee6-95ef-dab5e018ee99",
+                    "leftValue": "={{$node[\"🔗 Merge Lead + AI Summary\"].json.Budget}}",
+                    "rightValue": "3000+$",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "VIP"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1168,
+        -32
+      ],
+      "id": "ae924ed2-de1f-44c5-9878-28a3a7ff777c",
+      "name": "🎯 Route by Priority"
+    },
+    {
+      "parameters": {
+        "chatId": "315934034",
+        "text": "=🚀 <b>Новый лид (Small)</b>\n\n👤 <b>Имя:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Name}}\n\n🏢 <b>Компания:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Company}}\n\n📧 <b>Email:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Email}}\n\n💼 <b>Услуга:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Service}}\n\n💰 <b>Бюджет:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Budget}}\n\n⭐ <b>Priority:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Priority}}\n\n🤖 <b>AI Summary:</b>\n\n{{$('🔗 Merge Lead + AI Summary').item.json.Summary}}\n\n📝 <b>Комментарий:</b>\n\n{{$('🔗 Merge Lead + AI Summary').item.json.Notes}}",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "✅ Взял в работу",
+                    "additionalFields": {
+                      "callback_data": "=take_{{$json.Email}}"
+                    }
+                  },
+                  {
+                    "text": "📞 Позвонил",
+                    "additionalFields": {
+                      "callback_data": "=call_{{$json.Email}}"
+                    }
+                  },
+                  {
+                    "text": "❌ Отказ",
+                    "additionalFields": {
+                      "callback_data": "=reject_{{$json.Email}}"
+                    }
+                  },
+                  {
+                    "text": "💰 Сделка",
+                    "additionalFields": {
+                      "callback_data": "=deal_{{$json.Email}}"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1456,
+        -304
+      ],
+      "id": "be0f4bfa-5517-478f-bab8-5652d4ca729c",
+      "name": "📤 Send Small Lead",
+      "webhookId": "a7ae6d4c-be3f-496f-b7d6-876522979b52",
+      "credentials": {
+        "telegramApi": {
+          "id": "WjLnMJi1uZnZmuw2",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "315934034",
+        "text": "=🚀 <b>Новый лид (Medium)</b>\n\n👤 <b>Имя:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Name}}\n\n🏢 <b>Компания:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Company}}\n\n📧 <b>Email:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Email}}\n\n💼 <b>Услуга:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Service}}\n\n💰 <b>Бюджет:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Budget}}\n\n⭐ <b>Priority:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Priority}}\n\n🤖 <b>AI Summary:</b>\n\n{{$('🔗 Merge Lead + AI Summary').item.json.Summary}}\n\n📝 <b>Комментарий:</b>\n\n{{$('🔗 Merge Lead + AI Summary').item.json.Notes}}",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "✅ Взял в работу",
+                    "additionalFields": {
+                      "callback_data": "=take_{{$json.Email}}"
+                    }
+                  },
+                  {
+                    "text": "📞 Позвонил",
+                    "additionalFields": {
+                      "callback_data": "=call_{{$json.Email}}"
+                    }
+                  },
+                  {
+                    "text": "❌ Отказ",
+                    "additionalFields": {
+                      "callback_data": "=reject_{{$json.Email}}"
+                    }
+                  },
+                  {
+                    "text": "💰 Сделка",
+                    "additionalFields": {
+                      "callback_data": "=deal_{{$json.Email}}"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1456,
+        -128
+      ],
+      "id": "d0fab02c-2ef6-4ae6-a41d-428b68fd6dd0",
+      "name": "📤 Send Medium Lead",
+      "webhookId": "a7ae6d4c-be3f-496f-b7d6-876522979b52",
+      "credentials": {
+        "telegramApi": {
+          "id": "WjLnMJi1uZnZmuw2",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "315934034",
+        "text": "=🚀 <b>Новый лид (High)</b>\n\n👤 <b>Имя:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Name}}\n\n🏢 <b>Компания:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Company}}\n\n📧 <b>Email:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Email}}\n\n💼 <b>Услуга:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Service}}\n\n💰 <b>Бюджет:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Budget}}\n\n⭐ <b>Priority:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Priority}}\n\n🤖 <b>AI Summary:</b>\n\n{{$('🔗 Merge Lead + AI Summary').item.json.Summary}}\n\n📝 <b>Комментарий:</b>\n\n{{$('🔗 Merge Lead + AI Summary').item.json.Notes}}",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "✅ Взял в работу",
+                    "additionalFields": {
+                      "callback_data": "=take_{{$json.Email}}"
+                    }
+                  },
+                  {
+                    "text": "📞 Позвонил",
+                    "additionalFields": {
+                      "callback_data": "=call_{{$json.Email}}"
+                    }
+                  },
+                  {
+                    "text": "❌ Отказ",
+                    "additionalFields": {
+                      "callback_data": "=reject_{{$json.Email}}"
+                    }
+                  },
+                  {
+                    "text": "💰 Сделка",
+                    "additionalFields": {
+                      "callback_data": "=deal_{{$json.Email}}"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1456,
+        64
+      ],
+      "id": "62ff56ce-279e-4344-a22d-79a1e7460663",
+      "name": "📤 Send High Lead",
+      "webhookId": "a7ae6d4c-be3f-496f-b7d6-876522979b52",
+      "credentials": {
+        "telegramApi": {
+          "id": "WjLnMJi1uZnZmuw2",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "315934034",
+        "text": "=🚀 <b>Новый лид (VIP)</b>\n\n👤 <b>Имя:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Name}}\n\n🏢 <b>Компания:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Company}}\n\n📧 <b>Email:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Email}}\n\n💼 <b>Услуга:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Service}}\n\n💰 <b>Бюджет:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Budget}}\n\n⭐ <b>Priority:</b> {{$('🔗 Merge Lead + AI Summary').item.json.Priority}}\n\n🤖 <b>AI Summary:</b>\n\n{{$('🔗 Merge Lead + AI Summary').item.json.Summary}}\n\n📝 <b>Комментарий:</b>\n\n{{$('🔗 Merge Lead + AI Summary').item.json.Notes}}",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "✅ Взял в работу",
+                    "additionalFields": {
+                      "callback_data": "=take_{{$json.Email}}"
+                    }
+                  },
+                  {
+                    "text": "📞 Позвонил",
+                    "additionalFields": {
+                      "callback_data": "=call_{{$json.Email}}"
+                    }
+                  },
+                  {
+                    "text": "❌ Отказ",
+                    "additionalFields": {
+                      "callback_data": "=reject_{{$json.Email}}"
+                    }
+                  },
+                  {
+                    "text": "💰 Сделка",
+                    "additionalFields": {
+                      "callback_data": "=deal_{{$json.Email}}"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1456,
+        272
+      ],
+      "id": "3610f9fe-5692-4264-acd3-a400b127ba65",
+      "name": "📤 Send VIP Lead",
+      "webhookId": "a7ae6d4c-be3f-496f-b7d6-876522979b52",
+      "credentials": {
+        "telegramApi": {
+          "id": "WjLnMJi1uZnZmuw2",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1i6jryMH6_tFl0wNPRQJd9ooGi2SNZg6dkEB-HlHoUs8",
+          "mode": "list",
+          "cachedResultName": "AI Automation CRM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1i6jryMH6_tFl0wNPRQJd9ooGi2SNZg6dkEB-HlHoUs8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1i6jryMH6_tFl0wNPRQJd9ooGi2SNZg6dkEB-HlHoUs8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{$json.Name}}",
+            "Company": "={{$json.Company}}",
+            "Service": "={{$json.Service}}",
+            "Budget": "={{$json.Budget}}",
+            "Status": "New",
+            "Source": "={{$json.Source}}",
+            "Date": "={{$now}}",
+            "Notes": "={{$json.Notes}}",
+            "Email": "={{$json.Email}}",
+            "Priority": "={{$json.Priority}}",
+            "Summary": "={{$json.Summary}}",
+            "Owner": "Dmytro"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Service",
+              "displayName": "Service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Priority",
+              "displayName": "Priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Owner",
+              "displayName": "Owner",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        992,
+        0
+      ],
+      "id": "c382df2f-d746-4231-9879-9386c52ae281",
+      "name": "💾 Save Lead to CRM",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6Mt1u2oKoGWmBd7q",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        816,
+        0
+      ],
+      "id": "f768e6d8-c8a5-4406-843b-c2b475b2d41a",
+      "name": "🔗 Merge Lead + AI Summary"
+    },
+    {
+      "parameters": {
+        "content": "📥 INPUT\n\nReceives new lead data\nfrom Google Forms.",
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -112,
+        -224
+      ],
+      "typeVersion": 1,
+      "id": "22cd8f6d-7fb9-4103-b238-c71543f58425",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "🤖 AI PROCESSING\n\nGenerate AI summary\nAssign lead priority\n(Small / Medium / High / VIP)"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        448,
+        -224
+      ],
+      "typeVersion": 1,
+      "id": "87f9d375-24e7-4894-96e8-17c69f850482",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "📲 OUTPUT\n\nSave lead to CRM\n\nNotify sales team\nbased on priority",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1040,
+        -224
+      ],
+      "typeVersion": 1,
+      "id": "84c946ac-02f5-452a-ae0e-a7fd28cec86d",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "📥Receive Google Form": {
+      "main": [
+        [
+          {
+            "node": "📝 Parse User Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📝 Parse User Command": {
+      "main": [
+        [
+          {
+            "node": "🔗 Merge Lead + AI Summary",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "🤖 Generate AI Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🤖 Generate AI Summary": {
+      "main": [
+        [
+          {
+            "node": "🧠 Extract AI Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🧠 Extract AI Summary": {
+      "main": [
+        [
+          {
+            "node": "🔗 Merge Lead + AI Summary",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "🎯 Route by Priority": {
+      "main": [
+        [
+          {
+            "node": "📤 Send Small Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "📤 Send Medium Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "📤 Send High Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "📤 Send VIP Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "💾 Save Lead to CRM": {
+      "main": [
+        [
+          {
+            "node": "🎯 Route by Priority",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔗 Merge Lead + AI Summary": {
+      "main": [
+        [
+          {
+            "node": "💾 Save Lead to CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "33c32c20-d611-479b-a17d-27db2e1543eb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "df12cecef93665301418669d955e496ae64afc96e1111a54059be8969de7f105"
+  },
+  "nodeGroups": [],
+  "id": "QTfAH3rCmdsCZpBe",
+  "tags": []
+}
