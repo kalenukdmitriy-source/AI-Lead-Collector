@@ -162,30 +162,20 @@ AI-Lead-Collector/
 
 ---
 
-# 🚀 Getting Started
+# 🚀 Project Overview
 
-### 1. Clone the repository
+This repository showcases an AI-powered lead automation system built with **n8n**, **OpenAI**, **Google Forms**, **Google Sheets**, and **Telegram**.
 
-```bash
-git clone https://github.com/kalenukdmitriy-source/AI-Lead-Collector.git
-```
+The implementation demonstrates:
 
-### 2. Import the workflow
+- AI-based lead qualification
+- Automated CRM synchronization
+- Telegram notifications and lead management
+- Activity history tracking
+- End-to-end no-code workflow automation
 
-Open **n8n** and recreate or import the workflows into your workspace.
-
-### 3. Configure credentials
-
-Before running the automation configure:
-
-- OpenAI API
-- Google Forms
-- Google Sheets
-- Telegram Bot
-
-### 4. Activate
-
-Enable all workflows and submit a test form.
+> **Note:**  
+> This repository is intended for **portfolio and educational purposes**. Workflow files and API credentials are not included.
 
 ---
 
